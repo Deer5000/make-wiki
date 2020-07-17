@@ -1,8 +1,12 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-
+from django.views.generic.edit import CreateView
 from wiki.models import Article
+from wiki.forms import ArticleForm
+from django.http import HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
+
 
 
 class ArticleListView(ListView):
@@ -26,3 +30,17 @@ class ArticleDetailView(DetailView):
         return render(request, 'article.html', {
           'article': article
         })
+
+class ArticleCreateView(CreateView):
+      
+      def get(self, request, *args, **kwargs):
+        context = { 'form': ArticleForm(request.POST)}
+        return render(request, 'new_article.html', context)
+
+
+      def post(self, request, *args, **kwargs):
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+          new_wiki_article = form.save()
+          return HttpResponseRedirect(reverse_lazy('wiki-details-page', args=[new_wiki_article.slug]))
+        return render(request, 'new_article.html', {'form':form})

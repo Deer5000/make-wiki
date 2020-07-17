@@ -1,6 +1,8 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
+<img src="{% static "doge.jpg" %}" alt="My image">
   <h3>Wikis {% if articles %}<small class="text-muted">({{ articles|length }} Article{{ articles|length|pluralize:"s" }})</small>{% endif %}</h3>
   <hr>
   {% if articles %}
